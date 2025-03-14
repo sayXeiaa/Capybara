@@ -1,8 +1,6 @@
-require "capybara/dsl"
-Capybara.app_host = "http://localhost:8000/"
+require 'site_prism'
 
-class RegisterPage
-  include Capybara::DSL
+class RegisterPage < SitePrism::Page
 
   def visit_page
     visit "/"
@@ -12,56 +10,53 @@ class RegisterPage
     visit "register"
   end
 
-  def register_button?
-    has_selector?(:id, "register-button")
-  end
+  element :register_button, :id, "register-button"
+  element :name_field, :id, "name"
+  element :email_field, :id, "email"
+  element :password_field, :id, "password"
+  element :confirm_password_field, :id, "password_confirmation"
+  element :logo, :xpath, " //a/img"
+  element :submit_register, :css, "button[type='submit']"
+  element :landing_header, :css, "h2.font-semibold"
 
   def register_button_clickable?
-    has_selector?(:id, "register-button", wait: 5)
-  end  
-
-  def name_field?
-    has_selector?(:id, "name", wait: 3)
-  end
-
-  def password_field?
-    has_selector?(:id, "password", wait: 3)
-  end
-
-  def email_field?
-    has_selector?(:id, "email", wait: 3)
-  end
-
-  def password_field?
-    has_selector?(:id, "password", wait: 3)
-  end
-
-  def confirm_password_field?
-    has_selector?(:id, "password_confirmation", wait: 3)
-  end
+    register_button.click if register_button.visible?
+    has_logo?(wait: 2)
+  end 
 
   def enter_name(name)
-    find(:id, "name").send_keys(name)
+    if name_field.visible?
+      name_field.set(name)
+    end
   end
 
   def enter_email(email)
-    find(:id, "email").send_keys(email)
+    if email_field.visible?
+      email_field.set(email)
+    end
   end
 
   def enter_password(password)
-    find(:id, "password").send_keys(password)
+    if password_field.visible?
+      password_field.set(password)
+    end
   end
 
   def enter_password_confirmation(password_confirmation)
-    find(:id, "password_confirmation").send_keys(password_confirmation)
+    if confirm_password_field.visible?
+      confirm_password_field.set(password_confirmation)
+    end
   end
 
-  def can_register?(name, email, password, password_confirmation)
+  def register(name, email, password, password_confirmation)
     enter_name(name)
     enter_email(email)
     enter_password(password)
     enter_password_confirmation(password_confirmation)
-    find(:xpath, "//div[5]//button").click
-    has_selector?('h2.font-semibold')
+    (submit_register).click
   end  
+
+  def registered?
+    has_landing_header?(wait: 5) 
+  end
 end
