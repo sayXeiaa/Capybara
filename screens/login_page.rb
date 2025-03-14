@@ -1,7 +1,6 @@
 require 'site_prism'
 
 class LoginPage < SitePrism::Page
-  # include Capybara::DSL 
 
   def visit_page
     visit "/"
