@@ -16,6 +16,8 @@ class LoginPage < SitePrism::Page
   element :logo, :xpath, "//a/img"
   element :email_field, :id, "email"
   element :password_field, :id, "password"
+  element :submit_login, :css, "button[type='submit']"
+  element :landing_header, :css, "h2.font-semibold"
 
   def login_button_clickable?
     login_button.click if login_button.visible?
@@ -24,20 +26,23 @@ class LoginPage < SitePrism::Page
 
   def enter_email(email)
     if email_field.visible?
-      email_field.send_keys(email)
+      email_field.set(email)
     end
   end
 
   def enter_password(password)
     if password_field.visible?
-      password_field.send_keys(password)
+      password_field.set(password)
     end
   end
 
-  def can_login?(email, password)
-    enter_email(email)
-    enter_password(password)
-    find(:xpath, "//form//div[4]/button").click
-    has_selector?('h2.font-semibold')
-  end  
+  def login(email, password)
+    email_field.set(email)
+    password_field.set(password)
+    (submit_login).click
+  end
+
+  def logged_in?
+    has_landing_header?(wait: 5) 
+  end
 end

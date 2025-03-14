@@ -47,7 +47,8 @@ RSpec.describe "Login Page", type: :feature do
     end
 
     it "User can login" do
-      expect(login_page.can_login?("sa@example.com", "12345678")).to be true
+      login_page.login("sa@example.com", "12345678")
+      expect(login_page).to have_landing_header
     end
   end
 end
