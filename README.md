@@ -1,1 +1,1 @@
-# Capybara
+# Automation Testing w/ Ruby Capybara / SitePrism
