@@ -12,13 +12,13 @@ class LoginPage < SitePrism::Page
   end
 
   element :login_button, :id, "login-button"
-  # def login_button?
-  #   has_selector?(:id, "login-button")
-  # end
+  element :login_button_clickable, :id, "login-button"
+  element :logo, :xpath, "//a/img"
 
   def login_button_clickable?
-    has_selector?(:id, "login-button", wait: 5)
-  end  
+    login_button.click if login_button.visible?
+    has_logo?(wait: 5)
+  end
 
   def email_field?
     has_selector?(:id, "email", wait: 3)
