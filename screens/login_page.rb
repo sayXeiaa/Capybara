@@ -8,24 +8,23 @@ class LoginPage < SitePrism::Page
   end
 
   def visit_login_page
-    visit "/login"
+    visit "login"
   end
 
   element :login_button, :id, "login-button"
   element :login_button_clickable, :id, "login-button"
   element :logo, :xpath, "//a/img"
+  element :email_field, :id, "email"
 
   def login_button_clickable?
     login_button.click if login_button.visible?
     has_logo?(wait: 5)
   end
 
-  def email_field?
-    has_selector?(:id, "email", wait: 3)
-  end
-
   def enter_email(email)
-    find(:id, "email").send_keys(email)
+    if email_field.visible?
+      email_field.send_keys(email)
+    end
   end
 
   def password_field?
