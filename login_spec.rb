@@ -14,17 +14,13 @@ RSpec.describe "Login Page", type: :feature do
       login_page.visit_page
     end
 
-    # it "Has a Login button" do
-    #   expect(login_page.login_button?).to be true
-    # end
-
     it "Has a Login button" do
       expect(login_page).to have_login_button
     end
 
     it "Has a clickable login button" do
-      expect(login_page.login_button_clickable?).to be true
-    end
+      login_page.login_button_clickable?
+    end 
   end 
 
   context "Log in page" do
