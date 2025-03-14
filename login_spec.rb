@@ -29,11 +29,11 @@ RSpec.describe "Login Page", type: :feature do
     end
     
     it "Has an email field" do
-      expect(login_page.email_field?).to be true
+      expect(login_page).to have_email_field
     end
 
     it "Can type on Email field" do
-      expect(login_page.email_field?).to be true 
+      expect(login_page).to have_email_field
       login_page.enter_email("sa@example.com")
     end
 
