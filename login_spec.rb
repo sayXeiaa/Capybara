@@ -38,11 +38,11 @@ RSpec.describe "Login Page", type: :feature do
     end
 
     it "Has a password field" do
-      expect(login_page.password_field?).to be true
+      expect(login_page).to have_password_field
     end
 
     it "Can type on Password field" do
-      expect(login_page.password_field?).to be true 
+      expect(login_page).to have_password_field 
       login_page.enter_password("12345678")
     end
 

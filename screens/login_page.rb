@@ -15,6 +15,7 @@ class LoginPage < SitePrism::Page
   element :login_button_clickable, :id, "login-button"
   element :logo, :xpath, "//a/img"
   element :email_field, :id, "email"
+  element :password_field, :id, "password"
 
   def login_button_clickable?
     login_button.click if login_button.visible?
@@ -27,12 +28,10 @@ class LoginPage < SitePrism::Page
     end
   end
 
-  def password_field?
-    has_selector?(:id, "password", wait: 3)
-  end
-
   def enter_password(password)
-    find(:id, "password").send_keys(password)
+    if password_field.visible?
+      password_field.send_keys(password)
+    end
   end
 
   def can_login?(email, password)
