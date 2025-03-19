@@ -102,7 +102,7 @@ require 'selenium-webdriver'
 require "capybara/rspec"
 
 Capybara.configure do |config|
-  config.app_host = 'http://localhost:8000/'
+  config.app_host = 'http://localhost:8000'
   config.run_server = false
   config.default_driver = :selenium_firefox
   config.default_max_wait_time = 30
