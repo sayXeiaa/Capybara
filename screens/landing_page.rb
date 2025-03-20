@@ -10,7 +10,7 @@ class LandingPage < SitePrism::Page
   element :tracking_section, :xpath, '//div//div[1]'
   element :analytics_section, :xpath, '//div//div[2]'
   element :user_friendly_section, :xpath, '//div//div[3]'
-  element :tournament_button, :css, 'body main > div.py-6.sm\:py-12 div.bg-white a'
+  element :tournament_button, 'a[href="tournaments"]'
   element :tournament_page_label, :xpath, '//div/h2'
 
   def tournament_button_clickable?
