@@ -8,8 +8,23 @@ RSpec.describe "Login Page", type: :feature do
     Capybara.current_session.driver.browser.manage.window.maximize
   end
 
+  shared_examples "valid login" do |email, password|
+    it "Logs in successfully with email: #{email}" do
+      login_page.login(email, password)
+
+      expect(login_page).to have_landing_header(wait: 5)
+    end
+  end
+
+  shared_examples "invalid login" do |email, password, error_message|
+    it "Fails to log in with email: #{email}, password: #{password}" do
+      login_page.login(email, password)
+
+      expect(login_page).not_to have_landing_header
+    end
+  end
+
   context "Log in button" do 
-    
     before(:each) do
       login_page.visit_page
     end
@@ -19,7 +34,7 @@ RSpec.describe "Login Page", type: :feature do
     end
 
     it "Has a clickable login button" do
-      login_page.login_button_clickable?
+      expect(login_page.login_button_clickable?).to be true
     end 
   end 
 
@@ -27,7 +42,7 @@ RSpec.describe "Login Page", type: :feature do
     before(:each) do
       login_page.visit_login_page
     end
-    
+
     it "Has an email field" do
       expect(login_page).to have_email_field
     end
@@ -45,10 +60,28 @@ RSpec.describe "Login Page", type: :feature do
       expect(login_page).to have_password_field 
       login_page.enter_password("12345678")
     end
-
-    it "User can login" do
-      login_page.login("sa@example.com", "12345678")
-      expect(login_page).to have_landing_header
-    end
   end
+
+  context "Login Scenarios" do
+    context "Valid Login" do
+      before(:each) do
+        login_page.visit_login_page
+      end
+
+      include_examples "valid login", "sa@example.com", "12345678"
+      include_examples "valid login", "to@example.com", "Organizer123"
+    end
+
+    context "Invalid Login" do
+      before(:each) do
+        login_page.visit_login_page
+      end
+
+      include_examples "invalid login", "", ""
+      include_examples "invalid login", "invalid@example.com", "asjdh@as"
+      include_examples "invalid login", "user@example.com", ""
+      include_examples "invalid login", "", "password123"
+      include_examples "invalid login", "user", "1"
+    end
+  end  
 end

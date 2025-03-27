@@ -8,8 +8,21 @@ RSpec.describe "Register Page", type: :feature do
     Capybara.current_session.driver.browser.manage.window.maximize
   end
 
-  context "Register button" do
+  shared_examples "valid registration" do |name, email, password, password_confirmation|
+    it "Registers with name: #{name}, email: #{email}, password: #{password}" do
+      register_page.register(name, email, password, password_confirmation)
+      expect(register_page).to have_landing_header
+    end
+  end
 
+  shared_examples "invalid registration" do |name, email, password, password_confirmation|
+    it "Fails to register with name: #{name}, email: #{email}, password: #{password}" do
+      register_page.register(name, email, password, password_confirmation)
+      expect(register_page).not_to have_landing_header
+    end
+  end
+
+  context "Register button" do
     before(:each) do
       register_page.visit_page
     end
@@ -19,12 +32,11 @@ RSpec.describe "Register Page", type: :feature do
     end
 
     it "Has a clickable register button" do
-      register_page.register_button_clickable?
+      expect(register_page.register_button_clickable?).to be_truthy
     end
   end
 
   context "Register Page" do
-
     before(:each) do
       register_page.visit_register_page
     end
@@ -33,41 +45,36 @@ RSpec.describe "Register Page", type: :feature do
       expect(register_page).to have_name_field
     end
 
-    it "Can type on name field" do
-      expect(register_page).to have_name_field
-      register_page.enter_name("Saddam Hussein")
-    end
-
     it "Has an email field" do
       expect(register_page).to have_email_field
-    end
-
-    it "Can type on email field" do
-      expect(register_page).to have_email_field
-      register_page.enter_email("shussein@gmail.com")
     end
 
     it "Has a password field" do 
       expect(register_page).to have_password_field
     end
 
-    it "Can type on password field" do
-      expect(register_page).to have_password_field
-      register_page.enter_password("Test_123")
-    end
-
     it "Has a confirm password field" do
       expect(register_page).to have_confirm_password_field
     end
+  end
 
-    it "Can type on confirm password field" do
-      expect(register_page).to have_confirm_password_field
-      register_page.enter_password_confirmation("Test_123")
+  context "Register Scenario" do
+    context "Valid Credentials" do
+      before(:each) do
+        register_page.visit_register_page
+      end
+      include_examples "valid registration", "John Doe", "johndoe@example.com", "Password_123", "Password_123"
+      include_examples "valid registration", "Jane Smith", "janesmith@example.com", "SecurePass1", "SecurePass1"
     end
 
-    it "User can register" do
-      register_page.register("Saddam Hussein", "shussein@gmail.com", "Test_123", "Test_123")
-      expect(register_page).to have_landing_header
+    context "Invalid Credentials" do
+      before(:each) do
+        register_page.visit_register_page
+      end
+      include_examples "invalid registration", "", "", "", ""
+      include_examples "invalid registration", "", "invalidemail", "pass4", "diffpass"
+      include_examples "invalid registration", "Name", "", "ValidPass123", "ValidPass123"
+      include_examples "invalid registration", "Qasem Soleimani", "user@example.com", "P@ssw0rd", ""
     end
   end
 end
